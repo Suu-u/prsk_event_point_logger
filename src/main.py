@@ -93,22 +93,22 @@ def sum_points(csv_list):
 def calculate_per_hour(csv_list):
     sum_point = 0
     time = datetime.datetime.fromisoformat(csv_list[0][0])
-    prev_time = time
     sum_time = datetime.timedelta()
-    for i in range(len(csv_list)):
-        line = csv_list[i]
+    exclusion_flag = False
+    for line in csv_list:
+        prev_time = time
         time = datetime.datetime.fromisoformat(line[0])
         if line[1].isdigit():
+            if exclusion_flag:
+                exclusion_flag = False
+                continue
             sum_point += int(line[1])
             # 前の行との差分を稼働時間に追加
             sum_time += time - prev_time
-            prev_time = time
         else:
             comment = line[-1]
             if comment in NOT_MULTI_LIST:
-                i += 1 # 次の行のポイントを時速計算から除外
-            else:
-                prev_time = time # 次の行との差分を稼働時間に含める
+                exclusion_flag = True # 次の行のポイントを時速計算から除外
     sum_seconds = sum_time.total_seconds()
     per_hour = sum_point / sum_seconds * 3660
     return per_hour, sum_time
