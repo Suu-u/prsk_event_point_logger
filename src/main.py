@@ -22,18 +22,18 @@ def main():
             append_line(POINT_FILEPATH, output_list)
         else:
             if input_str == "comment":
-                comment = input(">>> comment content: ")
+                comment = input(">>> [comment] ")
                 output_list.append(datetime.datetime.now().isoformat())
                 output_list.append("NA")
                 output_list.append(comment)
                 append_line(POINT_FILEPATH, output_list)
             elif input_str == "border":
                 while  True:
-                    border = input(">>> border: ")
+                    border = input(">>> [border] ")
                     if border == "cancel":
                         break
                     if not border.isdigit():
-                        print("[ERROR] Input border number or 'cancel' to exit border mode")
+                        print("[ERROR] Inbalid input: Input border number or 'cancel' to exit border mode")
                     else:
                         output_list.append(datetime.datetime.now().isoformat())
                         output_list.append(int(border))
@@ -41,6 +41,9 @@ def main():
                         break
             elif input_str == "end":
                 return
+            else:
+                print("[ERROR] Invalid input: Input point number or following command")
+                print("        'comment', 'border', 'end'")
 
 
 def create_file(filepath,headers_list):
