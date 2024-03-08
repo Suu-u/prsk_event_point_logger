@@ -22,11 +22,23 @@ def main():
             append_line(POINT_FILEPATH, output_list)
         else:
             if input_str == "comment":
-                comment = input("Input comment content: ")
+                comment = input(">>> comment content: ")
                 output_list.append(datetime.datetime.now().isoformat())
                 output_list.append("NA")
                 output_list.append(comment)
                 append_line(POINT_FILEPATH, output_list)
+            elif input_str == "border":
+                while  True:
+                    border = input(">>> border: ")
+                    if border == "cancel":
+                        break
+                    if not border.isdigit():
+                        print("[ERROR] Input border number or 'cancel' to exit border mode")
+                    else:
+                        output_list.append(datetime.datetime.now().isoformat())
+                        output_list.append(int(border))
+                        append_line(BORDER_FILEPATH, output_list)
+                        break
             elif input_str == "end":
                 return
 
@@ -50,7 +62,7 @@ def append_line(filepath, line):
         with open(filepath, "a", encoding="utf-8", newline="") as file_object:
             writer = csv.writer(file_object)
             writer.writerow(line)
-            print(f"Write {line}")
+            print(f"Write to {filepath} {line}")
         return
     except Exception as e:
         raise Exception(e)
