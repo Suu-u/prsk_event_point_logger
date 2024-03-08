@@ -39,12 +39,29 @@ def main():
                         output_list.append(int(border))
                         append_line(BORDER_FILEPATH, output_list)
                         break
+            elif input_str == "show":
+                sum = sum_points(POINT_FILEPATH)
+                print(f"Total point: {sum} ({datetime.datetime.now()})")
             elif input_str == "end":
                 return
             else:
                 print("[ERROR] Invalid input: Input point number or following command")
                 print("        'comment', 'border', 'end'")
 
+
+def sum_points(filepath):
+    try:
+        with open(filepath, "r") as file_object:
+            reader = csv.reader(file_object)
+            csv_list = list(reader)
+            csv_list.pop(0) # remove header
+            sum = 0
+            for line in csv_list:
+                if line[1].isdigit():
+                    sum += int(line[1])
+            return sum
+    except Exception as e:
+        raise Exception(e)
 
 def create_file(filepath,headers_list):
     if path.exists(filepath):
