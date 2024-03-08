@@ -16,20 +16,14 @@ def main():
 
     life = 5
     while True:
-        output_list = []
         input_str = input(">>> ")
         if input_str.isdigit():
-            output_list.append(datetime.datetime.now().isoformat())
-            output_list.append(int(input_str))
-            output_list.append(life)
+            output_list = [datetime.datetime.now().isoformat(), int(input_str), life]
             append_line(POINT_FILEPATH, output_list)
         else:
             if input_str == "comment":
                 comment = input(">>> [comment] ")
-                output_list.append(datetime.datetime.now().isoformat())
-                output_list.append("NA")
-                output_list.append("NA")
-                output_list.append(comment)
+                output_list = [datetime.datetime.now().isoformat(), "NA", "NA", comment]
                 append_line(POINT_FILEPATH, output_list)
             elif input_str == "life":
                 while  True:
@@ -54,8 +48,7 @@ def main():
                     if not border.isdigit():
                         print("[ERROR] Inbalid input: Input border number or 'cancel' to exit border mode")
                     else:
-                        output_list.append(datetime.datetime.now().isoformat())
-                        output_list.append(int(border))
+                        output_list = [datetime.datetime.now().isoformat(), int(border)]
                         append_line(BORDER_FILEPATH, output_list)
                         break
             elif input_str == "show":
@@ -66,13 +59,10 @@ def main():
                         csv_list.pop(0) # remove header
                         sum = sum_points(csv_list)
                         print(datetime.datetime.now())
-                        print("Total point:")
-                        print(f"\t{sum}")
+                        print(f"Total point:\n\t{sum}")
                         per_hour, time = calculate_per_hour(csv_list)
-                        print("Total play time:")
-                        print(f"\t{time}")
-                        print("Average point per hour:")
-                        print(f"\t{per_hour}")
+                        print(f"Total play time:\n\t{time}")
+                        print(f"Average point per hour:\n\t{per_hour}")
                 except Exception as e:
                     raise Exception(e)
                 try:
@@ -81,8 +71,7 @@ def main():
                         csv_list = list(reader)
                         csv_list.pop(0) # remove header
                         border_per_hour = calculate_border_per_hour(csv_list)
-                        print("Border point per hour(estimate):")
-                        print(f"\t{border_per_hour}")
+                        print(f"Border point per hour(estimate):\n\t{border_per_hour}")
                 except Exception as e:
                     raise Exception(e)
             elif input_str == "exit":
@@ -113,7 +102,7 @@ def calculate_per_hour(csv_list):
                 exclusion_flag = False
                 continue
             sum_point += int(line[1])
-            sum_time += time - prev_time # 前の行との差分を稼働時間に追加
+            sum_time += time - prev_time
         else:
             comment = line[-1]
             if comment in NOT_MULTI_LIST:
