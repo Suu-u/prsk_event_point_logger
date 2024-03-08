@@ -6,7 +6,7 @@ POINT_FILEPATH = "point.csv"
 POINT_HEADER = ["date", "point", "life", "comment"]
 BORDER_FILEPATH = "border.csv"
 BORDER_HEADER = ["date", "point"]
-NOT_MULTI_LIST = ["チャレライ", "調整", "オート"] # みんなでライブの開始タイミングではないコメント
+NOT_MULTI_LIST = ["チャレライ", "調整", "オート"] # 次の行のポイントを時速計算から除外したいコメント
 
 
 def main():
@@ -103,8 +103,7 @@ def calculate_per_hour(csv_list):
                 exclusion_flag = False
                 continue
             sum_point += int(line[1])
-            # 前の行との差分を稼働時間に追加
-            sum_time += time - prev_time
+            sum_time += time - prev_time # 前の行との差分を稼働時間に追加
         else:
             comment = line[-1]
             if comment in NOT_MULTI_LIST:
