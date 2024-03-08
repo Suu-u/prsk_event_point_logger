@@ -75,6 +75,16 @@ def main():
                         print(f"\t{per_hour}")
                 except Exception as e:
                     raise Exception(e)
+                try:
+                    with open(BORDER_FILEPATH, "r") as file_object:
+                        reader = csv.reader(file_object)
+                        csv_list = list(reader)
+                        csv_list.pop(0) # remove header
+                        border_per_hour = calculate_border_per_hour(csv_list)
+                        print("Border point per hour(estimate):")
+                        print(f"\t{border_per_hour}")
+                except Exception as e:
+                    raise Exception(e)
             elif input_str == "exit":
                 return
             else:
@@ -111,6 +121,17 @@ def calculate_per_hour(csv_list):
     sum_seconds = sum_time.total_seconds()
     per_hour = sum_point / sum_seconds * 3660
     return per_hour, sum_time
+
+
+def calculate_border_per_hour(csv_list):
+    start_time = datetime.datetime.fromisoformat(csv_list[0][0])
+    start_point = int(csv_list[0][1])
+    recent_time = datetime.datetime.fromisoformat(csv_list[-1][0])
+    recent_point = int(csv_list[-1][1])
+    sum_seconds = (recent_time - start_time).total_seconds()
+    per_hour = (recent_point - start_point) / sum_seconds * 3660
+    return per_hour
+
 
 def create_file(filepath,headers_list):
     if path.exists(filepath):
