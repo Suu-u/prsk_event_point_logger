@@ -59,15 +59,22 @@ def main():
                         append_line(BORDER_FILEPATH, output_list)
                         break
             elif input_str == "show":
-                sum = sum_points(POINT_FILEPATH)
-                print(datetime.datetime.now())
-                print("Total point:")
-                print(f"\t{sum}")
-                per_hour, time = calculate_per_hour(POINT_FILEPATH)
-                print("Total play time:")
-                print(f"\t{time}")
-                print("Average point per hour:")
-                print(f"\t{per_hour}")
+                try:
+                    with open(POINT_FILEPATH, "r") as file_object:
+                        reader = csv.reader(file_object)
+                        csv_list = list(reader)
+                        csv_list.pop(0) # remove header
+                        sum = sum_points(csv_list)
+                        print(datetime.datetime.now())
+                        print("Total point:")
+                        print(f"\t{sum}")
+                        per_hour, time = calculate_per_hour(csv_list)
+                        print("Total play time:")
+                        print(f"\t{time}")
+                        print("Average point per hour:")
+                        print(f"\t{per_hour}")
+                except Exception as e:
+                    raise Exception(e)
             elif input_str == "exit":
                 return
             else:
@@ -75,51 +82,36 @@ def main():
                 print("        'comment', 'life', 'border', 'show', 'exit'")
 
 
-def sum_points(filepath):
-    try:
-        with open(filepath, "r") as file_object:
-            reader = csv.reader(file_object)
-            csv_list = list(reader)
-            csv_list.pop(0) # remove header
-            sum = 0
-            for line in csv_list:
-                if line[1].isdigit():
-                    sum += int(line[1])
-            return sum
-    except Exception as e:
-        raise Exception(e)
+def sum_points(csv_list):
+    sum = 0
+    for line in csv_list:
+        if line[1].isdigit():
+            sum += int(line[1])
+    return sum
 
 
-def calculate_per_hour(filepath):
-    try:
-        with open(filepath, "r") as file_object:
-            reader = csv.reader(file_object)
-            csv_list = list(reader)
-            csv_list.pop(0) # remove header
-            sum_point = 0
-            time = datetime.datetime.fromisoformat(csv_list[0][0])
+def calculate_per_hour(csv_list):
+    sum_point = 0
+    time = datetime.datetime.fromisoformat(csv_list[0][0])
+    prev_time = time
+    sum_time = datetime.timedelta()
+    for i in range(len(csv_list)):
+        line = csv_list[i]
+        time = datetime.datetime.fromisoformat(line[0])
+        if line[1].isdigit():
+            sum_point += int(line[1])
+            # 前の行との差分を稼働時間に追加
+            sum_time += time - prev_time
             prev_time = time
-            sum_time = datetime.timedelta()
-            for i in range(len(csv_list)):
-                line = csv_list[i]
-                time = datetime.datetime.fromisoformat(line[0])
-                if line[1].isdigit():
-                    sum_point += int(line[1])
-                    # 前の行との差分を稼働時間に追加
-                    sum_time += time - prev_time
-                    prev_time = time
-                else:
-                    comment = line[-1]
-                    if comment in NOT_MULTI_LIST:
-                        i += 1 # 次の行のポイントを時速計算から除外
-                    else:
-                        prev_time = time # 次の行との差分を稼働時間に含める
-            sum_seconds = sum_time.total_seconds()
-            per_hour = sum_point / sum_seconds * 3660
-            return per_hour, sum_time
-    except Exception as e:
-        raise Exception(e)
-
+        else:
+            comment = line[-1]
+            if comment in NOT_MULTI_LIST:
+                i += 1 # 次の行のポイントを時速計算から除外
+            else:
+                prev_time = time # 次の行との差分を稼働時間に含める
+    sum_seconds = sum_time.total_seconds()
+    per_hour = sum_point / sum_seconds * 3660
+    return per_hour, sum_time
 
 def create_file(filepath,headers_list):
     if path.exists(filepath):
