@@ -60,11 +60,11 @@ def main():
             elif input_str == "show":
                 sum = sum_points(POINT_FILEPATH)
                 print(f"Total point: {sum} ({datetime.datetime.now()})")
-            elif input_str == "end":
+            elif input_str == "exit":
                 return
             else:
                 print("[ERROR] Invalid input: Input point number or following command")
-                print("        'comment', 'life', 'border', 'end'")
+                print("        'comment', 'life', 'border', 'exit'")
 
 
 def sum_points(filepath):
