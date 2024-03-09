@@ -52,17 +52,18 @@ def main():
                         append_line(BORDER_FILEPATH, output_list)
                         break
             elif input_str == "show":
+                now_time = datetime.datetime.now()
+                print(now_time)
                 try:
                     with open(POINT_FILEPATH, "r") as file_object:
                         reader = csv.reader(file_object)
                         csv_list = list(reader)
                         csv_list.pop(0) # remove header
                         sum = sum_points(csv_list)
-                        print(datetime.datetime.now())
                         print(f"Total point:\n\t{sum}")
                         per_hour, time = calculate_per_hour(csv_list)
                         print(f"Total play time:\n\t{time}")
-                        print(f"Average point per hour:\n\t{per_hour}")
+                        print(f"Average point per hour:\n\t{per_hour}\n")
                 except Exception as e:
                     raise Exception(e)
                 try:
@@ -70,8 +71,13 @@ def main():
                         reader = csv.reader(file_object)
                         csv_list = list(reader)
                         csv_list.pop(0) # remove header
+                        recent_border = int(csv_list[-1][1])
+                        recent_time = datetime.datetime.fromisoformat(csv_list[-1][0])
+                        print(f"Recent actual border:\n\t{recent_border} ({now_time - recent_time} ago)")
                         border_per_hour = calculate_border_per_hour(csv_list)
-                        print(f"Border point per hour(estimate):\n\t{border_per_hour}")
+                        print(f"Border point per hour:\n\t{border_per_hour}")
+                        estimate_border = recent_border + border_per_hour * (now_time - recent_time).total_seconds() / 3660
+                        print(f"Current Border estimate:\n\t{int(estimate_border)}")
                 except Exception as e:
                     raise Exception(e)
             elif input_str == "exit":
