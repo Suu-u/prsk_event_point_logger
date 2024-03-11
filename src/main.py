@@ -74,10 +74,11 @@ def main():
                         recent_border = int(csv_list[-1][1])
                         recent_time = datetime.datetime.fromisoformat(csv_list[-1][0])
                         print(f"Recent actual border:\n\t{recent_border} ({now_time - recent_time} ago)")
-                        border_per_hour = calculate_border_per_hour(csv_list)
-                        print(f"Border point per hour:\n\t{border_per_hour}")
-                        estimate_border = recent_border + border_per_hour * (now_time - recent_time).total_seconds() / 3660
-                        print(f"Current Border estimate:\n\t{int(estimate_border)}")
+                        border_per_hour_0, border_per_hour_1 = calculate_border_per_hour(csv_list)
+                        print(f"Border point per hour:\n\t{border_per_hour_0} | {border_per_hour_1}")
+                        estimate_border_0 = recent_border + border_per_hour_0 * (now_time - recent_time).total_seconds() / 3660
+                        estimate_border_1 = recent_border + border_per_hour_1 * (now_time - recent_time).total_seconds() / 3660
+                        print(f"Current Border estimate:\n\t{int(estimate_border_0)} | {int(estimate_border_1)}")
                 except Exception as e:
                     raise Exception(e)
             elif input_str == "exit":
@@ -121,11 +122,15 @@ def calculate_per_hour(csv_list):
 def calculate_border_per_hour(csv_list):
     start_time = datetime.datetime.fromisoformat(csv_list[0][0])
     start_point = int(csv_list[0][1])
+    recent_prev_time = datetime.datetime.fromisoformat(csv_list[-2][0])
+    recent_prev_point = int(csv_list[-2][1])
     recent_time = datetime.datetime.fromisoformat(csv_list[-1][0])
     recent_point = int(csv_list[-1][1])
-    sum_seconds = (recent_time - start_time).total_seconds()
-    per_hour = (recent_point - start_point) / sum_seconds * 3660
-    return per_hour
+    total_sum_seconds = (recent_time - start_time).total_seconds()
+    recent_sum_seconds = (recent_time - recent_prev_time).total_seconds()
+    per_hour_total = (recent_point - start_point) / total_sum_seconds * 3660
+    per_hour_recent = (recent_point - recent_prev_point) / recent_sum_seconds * 3660
+    return per_hour_total, per_hour_recent
 
 
 def create_file(filepath,headers_list):
