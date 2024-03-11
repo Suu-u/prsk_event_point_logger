@@ -3,7 +3,7 @@ import datetime
 from os import path
 
 POINT_FILEPATH = "point.csv"
-POINT_HEADER = ["date", "point", "life", "comment"]
+POINT_HEADER = ["date", "point", "libo", "comment"]
 BORDER_FILEPATH = "border.csv"
 BORDER_HEADER = ["date", "point"]
 NOT_MULTI_LIST = ["チャレライ", "調整", "オート"] # 次の行のポイントを時速計算から除外したいコメント
@@ -25,19 +25,19 @@ def main():
                 comment = input(">>> [comment] ")
                 output_list = [datetime.datetime.now().isoformat(), "NA", "NA", comment]
                 append_line(POINT_FILEPATH, output_list)
-            elif input_str == "life":
+            elif input_str == "libo":
                 while  True:
-                    new_life = input(">>> [life] ")
+                    new_life = input(">>> [libo] ")
                     if new_life == "cancel":
                         break
                     if not new_life.isdigit():
-                        print("[ERROR] Inbalid input: Input life number or 'cancel' to exit life mode")
+                        print("[ERROR] Inbalid input: Input live bonus or 'cancel' to exit libo mode")
                     else:
                         new_life = int(new_life)
                         if new_life <= 0 or new_life > 10:
-                            print("[ERROR] Inbalid input: Life number is 1 or more and 10 or less")
+                            print("[ERROR] Inbalid input: Live bonus is 1 or more and 10 or less")
                         else:
-                            print(f"Set life number to {new_life}")
+                            print(f"Set live bonus to {new_life}")
                             life = new_life
                             break
             elif input_str == "border":
@@ -84,7 +84,7 @@ def main():
                 return
             else:
                 print("[ERROR] Invalid input: Input point number or following command")
-                print("        'comment', 'life', 'border', 'show', 'exit'")
+                print("        'comment', 'libo', 'border', 'show', 'exit'")
 
 
 def sum_points(csv_list):
