@@ -7,6 +7,7 @@ POINT_HEADER = ["date", "point", "libo", "comment"]
 BORDER_FILEPATH = "border.csv"
 BORDER_HEADER = ["date", "point"]
 NOT_MULTI_LIST = ["チャレライ", "調整", "オート"] # 次の行のポイントを時速計算から除外したいコメント
+END_TIME = datetime.datetime.fromisoformat("2024-03-11 20:00:00.000000")
 
 
 def main():
@@ -76,9 +77,12 @@ def main():
                         print(f"Recent actual border:\n\t{recent_border} ({now_time - recent_time} ago)")
                         border_per_hour_0, border_per_hour_1 = calculate_border_per_hour(csv_list)
                         print(f"Border point per hour:\n\t{border_per_hour_0} | {border_per_hour_1}")
-                        estimate_border_0 = recent_border + border_per_hour_0 * (now_time - recent_time).total_seconds() / 3660
-                        estimate_border_1 = recent_border + border_per_hour_1 * (now_time - recent_time).total_seconds() / 3660
-                        print(f"Current Border estimate:\n\t{int(estimate_border_0)} | {int(estimate_border_1)}")
+                        current_border_0 = recent_border + border_per_hour_0 * (now_time - recent_time).total_seconds() / 3660
+                        current_border_1 = recent_border + border_per_hour_1 * (now_time - recent_time).total_seconds() / 3660
+                        print(f"Current Border estimate:\n\t{int(current_border_0)} | {int(current_border_1)}")
+                        final_border_0 = recent_border + border_per_hour_0 * (END_TIME - recent_time).total_seconds() / 3660
+                        final_border_1 = recent_border + border_per_hour_1 * (END_TIME - recent_time).total_seconds() / 3660
+                        print(f"Final Border estimate ({END_TIME}):\n\t{int(final_border_0)} | {int(final_border_1)}")
                 except Exception as e:
                     raise Exception(e)
             elif input_str == "exit":
