@@ -35,8 +35,8 @@ def main():
                         print("[ERROR] Inbalid input: Input live bonus or 'cancel' to exit libo mode")
                     else:
                         new_life = int(new_life)
-                        if new_life <= 0 or new_life > 10:
-                            print("[ERROR] Inbalid input: Live bonus is 1 or more and 10 or less")
+                        if new_life < 0 or new_life > 10:
+                            print("[ERROR] Inbalid input: Live bonus is 0 or more and 10 or less")
                         else:
                             print(f"Set live bonus to {new_life}")
                             life = new_life
