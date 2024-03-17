@@ -7,7 +7,7 @@ POINT_HEADER = ["date", "point", "libo", "comment"]
 BORDER_FILEPATH = "border.csv"
 BORDER_HEADER = ["date", "point"]
 NOT_MULTI_LIST = ["チャレライ", "調整", "オート"] # 次の行のポイントを時速計算から除外したいコメント
-END_TIME = datetime.datetime.fromisoformat("2024-03-14 20:00:00.000000")
+END_TIME = datetime.datetime.fromisoformat("2024-03-20 20:00:00.000000")
 
 
 def main():
